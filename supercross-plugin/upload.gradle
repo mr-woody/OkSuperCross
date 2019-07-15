@@ -1,0 +1,42 @@
+apply plugin: 'maven'
+
+def MAVEN_URL = rootProject.ext.maven_url
+def LOCAL_MAVEN_URL = rootProject.ext.local_maven_url
+
+Properties properties = new Properties()
+properties.load(project.rootProject.file('local.properties').newDataInputStream())
+uploadArchives {
+    repositories {
+        mavenDeployer {
+            //本地仓库路径
+            repository(url: LOCAL_MAVEN_URL)
+            /*
+            repository(url: MAVEN_URL) {
+                authentication(userName: rootProject.ext.user, password: properties.getProperty("maven.password"))
+            }
+            */
+            pom.project {
+                version rootProject.ext.supercross_plugin.version
+                artifactId rootProject.ext.supercross_plugin.artifact_id
+                groupId rootProject.ext.supercross_plugin.group_id
+                description rootProject.ext.supercross_plugin.description
+            }
+        }
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

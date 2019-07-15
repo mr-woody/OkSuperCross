@@ -1,0 +1,71 @@
+// Top-level build file where you can add configuration options common to all sub-projects/modules.
+buildscript {
+    repositories {
+        //自定义插件maven地址，替换成你自己的maven地址
+        maven { url 'file:///Users/woodys/.m2/repository' }
+        google()
+        jcenter()
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:3.1.4'
+        classpath 'com.okay.supercross.plugin:supercross-plugin:1.0.2-SNAPSHOT'
+        // NOTE: Do not place your application dependencies here; they belong
+        // in the individual module build.gradle files
+    }
+}
+
+allprojects {
+    repositories {
+        google()
+        jcenter()
+    }
+}
+
+task clean(type: Delete) {
+    delete rootProject.buildDir
+}
+
+
+
+ext {
+    compileSdkVersion = 28
+    buildToolsVersion = '28.0.3'
+    minSdkVersion = 15
+    targetSdkVersion = 28
+
+    //remote repository information
+    user = "yuetao"
+    maven_url = 'http://10.60.0.100:8081/repository/okayclient_snapshot/'
+
+    // 本地仓库路径
+    local_maven_url = 'file:///users/woodys/.m2/repository/'
+
+
+    //supercross-api
+    supercross_api = [
+            version='1.0.0-SNAPSHOT',
+            group_id="com.okay.supercross",
+            artifact_id="supercross-api",
+            description="Android supercross-api library"
+    ]
+
+
+
+    //supercross-compiler
+    supercross_compiler = [
+            version : '1.0.0-SNAPSHOT',
+            group_id : "com.okay.supercross.compiler",
+            artifact_id : "supercross-compiler",
+            description : "Android supercross-compiler library"
+    ]
+
+
+    //supercross-plugin
+    supercross_plugin = [
+            version : '1.0.2-SNAPSHOT',
+            group_id : "com.okay.supercross.plugin",
+            artifact_id : "supercross-plugin",
+            description : "Android supercross-plugin library"
+    ]
+
+}

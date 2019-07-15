@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center_horizontal"
+    android:orientation="vertical">
+
+    <Button
+        android:id="@+id/btn_registerRemoteService"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="注册跨组件弹服务" />
+
+    <Button
+        android:id="@+id/btn_getRemoteService"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="调用跨组件弹" />
+
+    <Button
+        android:id="@+id/btn_unregisterRemoteService"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="注销远程服务" />
+
+    <Button
+        android:id="@+id/btn_multi_process"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="跳转到其他进程使用远程服务" />
+
+    <Space
+        android:layout_width="1dp"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
+
+    <TextView
+        android:id="@+id/tv_info"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
+        android:text="a_main" />
+</LinearLayout>

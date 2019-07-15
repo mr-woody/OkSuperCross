@@ -1,0 +1,64 @@
+// Top-level build file where you can add configuration options common to all sub-projects/modules.
+apply plugin: 'maven'
+def MAVEN_URL=rootProject.ext.maven_url
+allprojects {
+    repositories {
+        maven{
+            url MAVEN_URL
+        }
+    }
+}
+tasks.withType(Javadoc) {
+    options{
+        encoding "UTF-8"
+        charSet 'UTF-8'
+        links "http://docs.oracle.com/javase/7/docs/api"
+    }
+}
+task sourcesJar(type: Jar) {
+    from android.sourceSets.main.java.srcDirs
+    classifier = 'sources'
+}
+
+task makeJar(type: Copy) {
+    delete 'build/libs/http.jar'
+    from('build/intermediates/bundles/release/')
+    into('build/libs/')
+    include('classes.jar')
+    rename ('classes.jar', 'http.jar')
+}
+
+task javadoc(type: Javadoc) {
+    source = android.sourceSets.main.java.srcDirs
+    classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
+    destinationDir = file("../javadoc/")
+    failOnError false
+}
+task javadocJar(type: Jar, dependsOn: javadoc) {
+    classifier = 'javadoc'
+    from javadoc.destinationDir
+}
+artifacts {
+    archives javadocJar
+    archives sourcesJar
+}
+//------------------------------
+Properties properties = new Properties()
+properties.load(project.rootProject.file('local.properties').newDataInputStream())
+uploadArchives {
+    configuration = configurations.archives
+    repositories {
+        mavenDeployer {
+            repository(url: MAVEN_URL) {
+                authentication(userName: rootProject.ext.user, password: properties.getProperty("maven.password"))
+            }
+            pom.project {
+                version rootProject.ext.version
+                artifactId rootProject.ext.artifact_id
+                groupId rootProject.ext.group_id
+                description rootProject.ext.description
+                packaging "aar"
+            }
+        }
+    }
+}
