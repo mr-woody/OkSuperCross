@@ -20,9 +20,9 @@ android {
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation "com.android.support:appcompat-v7:27.+"
-    api project(':supercross-annotation')
 }
 
 sourceCompatibility = "1.7"
 targetCompatibility = "1.7"
 
+apply from : "upload.gradle"

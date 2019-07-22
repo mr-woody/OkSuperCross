@@ -1,0 +1,24 @@
+apply from: '../maven.gradle'
+
+//------------------------------
+def MAVEN_URL=rootProject.ext.maven_url
+
+Properties properties = new Properties()
+properties.load(project.rootProject.file('local.properties').newDataInputStream())
+uploadArchives {
+    configuration = configurations.archives
+    repositories {
+        mavenDeployer {
+            repository(url: MAVEN_URL) {
+                authentication(userName: rootProject.ext.user, password: properties.getProperty("maven.password"))
+            }
+            pom.project {
+                version rootProject.ext.supercross_api.version
+                artifactId rootProject.ext.supercross_api.artifact_id
+                groupId rootProject.ext.supercross_api.group_id
+                description rootProject.ext.supercross_api.description
+                packaging "aar"
+            }
+        }
+    }
+}

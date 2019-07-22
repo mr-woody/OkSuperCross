@@ -6,8 +6,8 @@ import android.os.IBinder;
 import android.os.RemoteException;
 import android.text.TextUtils;
 
-import com.okay.supercross.bean.BinderWrapper;
 import com.okay.supercross.IRemoteTransfer;
+import com.okay.supercross.bean.BinderWrapper;
 import com.okay.supercross.config.Constants;
 import com.okay.supercross.event.Event;
 import com.okay.supercross.log.Debugger;

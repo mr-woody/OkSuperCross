@@ -32,7 +32,3 @@
 -keep class **.R_$* {
  *;
 }
--keep @com.okay.supercross.annotation.RemoteServiceImpl class * {*;}
--keepnames class com.okay.supercross.apt.** { *; }
--keepnames class * implements com.okay.supercross.application.IApplicationLife { *; }
--keep public class * extends com.okay.supercross.processors.RemoteServiceProcessor { *; }

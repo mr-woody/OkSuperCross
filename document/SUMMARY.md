@@ -17,7 +17,7 @@
 
 <activity
     android:name=".activity.Main3Activity"
-    android:process="com.hlj.demo.remote2" />
+    android:process="com.okay.demo.remote2" />
 
 ```
 * 说明:

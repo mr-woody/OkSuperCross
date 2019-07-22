@@ -1,1 +1,1 @@
-include ':app', ':Plug1', ':common', ':Plug2', ':supercross-compiler','supercross-api', ':supercross-annotation', ':supercross-plugin'
+include ':app', ':Plug1', ':common', ':Plug2','supercross-api', ':supercross-plugin'

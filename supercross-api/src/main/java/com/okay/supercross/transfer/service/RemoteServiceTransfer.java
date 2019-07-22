@@ -5,10 +5,10 @@ import android.content.Intent;
 import android.os.IBinder;
 import android.os.RemoteException;
 
-import com.okay.supercross.bean.BinderWrapper;
 import com.okay.supercross.IDispatcher;
 import com.okay.supercross.IRemoteTransfer;
 import com.okay.supercross.bean.BinderBean;
+import com.okay.supercross.bean.BinderWrapper;
 import com.okay.supercross.config.Constants;
 import com.okay.supercross.dispatcher.DispatcherService;
 import com.okay.supercross.log.Debugger;
@@ -57,7 +57,7 @@ public class RemoteServiceTransfer {
 
     /**
      * 思考:其实是不是不用这么麻烦，直接利用事件通知机制进行通知就可以了吧？
-     * 可以是可以，但是逻辑上就不那么清晰了，而且要写很多ugly的if语句，可读性和可维护性也差了。
+     * 可以是可以，但是逻辑上就不那么清晰了，而且要写很多的if语句，可读性和可维护性也差了。
      *
      * @param serviceCanonicalName
      * @param context

@@ -1,13 +1,13 @@
 package com.okay.supercross.plugin.injector
 
 import com.android.build.api.transform.JarInput
+import com.okay.supercross.plugin.service.IServiceGenerator
+import com.okay.supercross.plugin.service.StubServiceGenerator
+import com.okay.supercross.plugin.utils.JarUtils
 import javassist.ClassPool
 import javassist.CtClass
 import javassist.CtMethod
 import org.apache.commons.io.FileUtils
-import com.okay.supercross.plugin.service.IServiceGenerator
-import com.okay.supercross.plugin.service.StubServiceGenerator
-import com.okay.supercross.plugin.utils.JarUtils
 
 import java.util.jar.JarEntry
 import java.util.jar.JarFile

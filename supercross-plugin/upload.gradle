@@ -9,12 +9,11 @@ uploadArchives {
     repositories {
         mavenDeployer {
             //本地仓库路径
-            repository(url: LOCAL_MAVEN_URL)
-            /*
+            //repository(url: LOCAL_MAVEN_URL)
+            //远程仓库
             repository(url: MAVEN_URL) {
                 authentication(userName: rootProject.ext.user, password: properties.getProperty("maven.password"))
             }
-            */
             pom.project {
                 version rootProject.ext.supercross_plugin.version
                 artifactId rootProject.ext.supercross_plugin.artifact_id

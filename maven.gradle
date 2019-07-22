@@ -1,13 +1,5 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 apply plugin: 'maven'
-def MAVEN_URL=rootProject.ext.maven_url
-allprojects {
-    repositories {
-        maven{
-            url MAVEN_URL
-        }
-    }
-}
 tasks.withType(Javadoc) {
     options{
         encoding "UTF-8"
@@ -41,24 +33,4 @@ task javadocJar(type: Jar, dependsOn: javadoc) {
 artifacts {
     archives javadocJar
     archives sourcesJar
-}
-//------------------------------
-Properties properties = new Properties()
-properties.load(project.rootProject.file('local.properties').newDataInputStream())
-uploadArchives {
-    configuration = configurations.archives
-    repositories {
-        mavenDeployer {
-            repository(url: MAVEN_URL) {
-                authentication(userName: rootProject.ext.user, password: properties.getProperty("maven.password"))
-            }
-            pom.project {
-                version rootProject.ext.version
-                artifactId rootProject.ext.artifact_id
-                groupId rootProject.ext.group_id
-                description rootProject.ext.description
-                packaging "aar"
-            }
-        }
-    }
 }

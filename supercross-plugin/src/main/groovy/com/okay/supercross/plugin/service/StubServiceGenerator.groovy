@@ -2,11 +2,11 @@
 package com.okay.supercross.plugin.service
 
 import com.android.build.gradle.AppExtension
-import groovy.xml.MarkupBuilder
-import org.gradle.api.Project
 import com.okay.supercross.plugin.extension.DispatcherExtension
 import com.okay.supercross.plugin.manifest.IManifestParser
 import com.okay.supercross.plugin.manifest.ManifestParser
+import groovy.xml.MarkupBuilder
+import org.gradle.api.Project
 
 class StubServiceGenerator implements IServiceGenerator {
 

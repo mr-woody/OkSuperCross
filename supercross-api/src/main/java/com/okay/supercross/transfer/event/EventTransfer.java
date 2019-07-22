@@ -5,9 +5,9 @@ import android.content.Intent;
 import android.os.RemoteException;
 import android.text.TextUtils;
 
-import com.okay.supercross.bean.BinderWrapper;
 import com.okay.supercross.IDispatcher;
 import com.okay.supercross.IRemoteTransfer;
+import com.okay.supercross.bean.BinderWrapper;
 import com.okay.supercross.config.Constants;
 import com.okay.supercross.dispatcher.DispatcherService;
 import com.okay.supercross.event.Event;

@@ -2,12 +2,12 @@ package com.okay.supercross.plugin
 
 import com.android.build.api.transform.*
 import com.android.build.gradle.internal.pipeline.TransformManager
+import com.okay.supercross.plugin.injector.StubServiceMatchInjector
+import com.okay.supercross.plugin.service.IServiceGenerator
 import javassist.ClassPool
 import org.apache.commons.codec.digest.DigestUtils
 import org.apache.commons.io.FileUtils
 import org.gradle.api.Project
-import com.okay.supercross.plugin.injector.StubServiceMatchInjector
-import com.okay.supercross.plugin.service.IServiceGenerator
 
 class SuperCrossTransform extends Transform {
 

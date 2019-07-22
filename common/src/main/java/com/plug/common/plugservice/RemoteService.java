@@ -1,13 +1,11 @@
 package com.plug.common.plugservice;
 
 import com.okay.supercross.ServiceCallback;
-import com.okay.supercross.annotation.ProcessId;
 
 /**
  * Plug1的远程协议类
  * 参数禁止使用基本类型，可用包装类代替，防止反射无法找不到该方法
  */
-@ProcessId("com.plug.plug1")
 public interface RemoteService {
     /**
      * 登录

@@ -8,8 +8,8 @@ import android.os.IBinder;
 
 import com.okay.supercross.bean.ConnectionBean;
 import com.okay.supercross.log.Debugger;
-import com.okay.supercross.utils.ServiceUtils;
 import com.okay.supercross.match.StubServiceMatcher;
+import com.okay.supercross.utils.ServiceUtils;
 
 import java.util.HashMap;
 import java.util.List;

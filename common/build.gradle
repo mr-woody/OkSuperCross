@@ -31,8 +31,5 @@ dependencies {
     api 'com.android.support:multidex:1.0.3'
 
     api project(':supercross-api')
-    //api 'com.okay.supercross:1.0.15'
-    annotationProcessor project(':supercross-compiler')
-    //annotationProcessor 'com.okay.supercrosscompiler:1.0.6'
 
 }

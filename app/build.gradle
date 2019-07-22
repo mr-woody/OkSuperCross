@@ -27,7 +27,6 @@ android {
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation project(':common')
-    annotationProcessor project(':supercross-compiler')
     if (!runAsApk.toBoolean()) {
         implementation project(':Plug1')
         implementation project(':Plug2')

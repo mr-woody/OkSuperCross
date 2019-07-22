@@ -1,11 +1,11 @@
 package com.okay.supercross.plugin
 
 import com.android.build.gradle.AppExtension
-import org.gradle.api.Plugin
-import org.gradle.api.Project
 import com.okay.supercross.plugin.extension.DispatcherExtension
 import com.okay.supercross.plugin.service.IServiceGenerator
 import com.okay.supercross.plugin.service.StubServiceGenerator
+import org.gradle.api.Plugin
+import org.gradle.api.Project
 
 class SuperCrossPlugin implements Plugin<Project> {
 

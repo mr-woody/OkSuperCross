@@ -7,14 +7,14 @@ import android.net.Uri;
 import android.os.IBinder;
 import android.os.RemoteException;
 
-import com.okay.supercross.bean.BinderWrapper;
 import com.okay.supercross.IDispatcher;
 import com.okay.supercross.IRemoteTransfer;
 import com.okay.supercross.bean.BinderBean;
+import com.okay.supercross.bean.BinderWrapper;
 import com.okay.supercross.config.Constants;
-import com.okay.supercross.dispatcher.cursor.DispatcherCursor;
 import com.okay.supercross.dispatcher.DispatcherProvider;
 import com.okay.supercross.dispatcher.DispatcherService;
+import com.okay.supercross.dispatcher.cursor.DispatcherCursor;
 import com.okay.supercross.event.Event;
 import com.okay.supercross.event.EventCallback;
 import com.okay.supercross.log.Debugger;

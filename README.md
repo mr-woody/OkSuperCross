@@ -52,12 +52,14 @@
 buildscript {
     repositories {
         ......
-        //自定义插件maven地址，替换成服务器的maven地址
-        maven { url 'file:///Users/woodys/.m2/repository' }
+        //本地maven地址，
+        //maven { url 'file:///Users/woodys/.m2/repository' }
+        //服务器的maven地址
+        maven{ url "http://10.60.0.100:8081/repository/okayclient_snapshot/"}
     }
     dependencies {
         ......
-        classpath 'com.okay.supercross.plugin:supercross-plugin:1.0.2-SNAPSHOT'
+        classpath 'com.okay.supercross.plugin:supercross-plugin:1.0.2-20190722.071333-1'
     }
 }
 ```
@@ -80,7 +82,7 @@ allprojects {
 
 dependencies {
     ......
-    implementation "com.okay.supercross:supercross-api:1.0.0-SNAPSHOT"
+    implementation "com.okay.supercross:supercross-api:1.0.1-20190722.071332-1"
 }
 
 ```
