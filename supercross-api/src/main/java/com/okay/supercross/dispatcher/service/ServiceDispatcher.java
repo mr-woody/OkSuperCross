@@ -6,8 +6,8 @@ import android.os.RemoteException;
 import com.okay.supercross.SuperCross;
 import com.okay.supercross.bean.BinderBean;
 import com.okay.supercross.log.Debugger;
-import com.okay.supercross.service.emergency.EmergencyHandler;
-import com.okay.supercross.service.emergency.IEmergencyHandler;
+import com.okay.supercross.dispatcher.listener.EmergencyHandler;
+import com.okay.supercross.dispatcher.listener.IEmergencyHandler;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;

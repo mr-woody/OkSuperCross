@@ -1,6 +1,5 @@
 package com.okay.supercross.plugin
 
-import com.android.build.gradle.AppExtension
 import com.okay.supercross.plugin.extension.DispatcherExtension
 import com.okay.supercross.plugin.service.IServiceGenerator
 import com.okay.supercross.plugin.service.StubServiceGenerator
@@ -17,18 +16,8 @@ class SuperCrossPlugin implements Plugin<Project> {
     void apply(Project project) {
 
         project.extensions.create(DISPATCHER_EXTENSION_NAME, DispatcherExtension)
-
-        def android = project.extensions.getByType(AppExtension)
-
         stubServiceGenerator.injectStubServiceToManifest(project)
 
-        //注册一个Transform
-        def classTransform = new SuperCrossTransform(project, stubServiceGenerator)
-
-        android.registerTransform(classTransform)
-
-        println("================apply router plugin==========")
     }
-
 }
 

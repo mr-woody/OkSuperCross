@@ -8,9 +8,6 @@ import com.okay.supercross.log.Debugger;
 
 public class ServiceUtils {
 
-    private ServiceUtils() {
-    }
-
     /**
      * 考虑到Android 8.0在后台调用startService时会抛出IllegalStateException
      *

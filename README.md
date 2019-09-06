@@ -59,7 +59,7 @@ buildscript {
     }
     dependencies {
         ......
-        classpath 'com.okay.supercross.plugin:supercross-plugin:1.0.2-20190722.071333-1'
+        classpath 'com.okay.supercross.plugin:supercross-plugin:1.0.3-SNAPSHOT'
     }
 }
 ```
@@ -82,7 +82,7 @@ allprojects {
 
 dependencies {
     ......
-    implementation "com.okay.supercross:supercross-api:1.0.1-20190722.071332-1"
+    implementation "com.okay.supercross:supercross-api:1.1.0-SNAPSHOT"
 }
 
 ```

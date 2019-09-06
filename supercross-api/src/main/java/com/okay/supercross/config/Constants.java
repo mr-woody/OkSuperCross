@@ -23,8 +23,4 @@ public class Constants {
     public static final String DISPATCH_EVENT_ACTION = "com.okay.supercross.dispatch_event";
 
 
-
-
-
-
 }
