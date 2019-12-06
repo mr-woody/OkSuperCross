@@ -36,8 +36,8 @@ public class SuperCross {
         if (initFlag.get() || context == null) {
             return;
         }
-        appContext = context.getApplicationContext();
-        RemoteTransfer.getInstance().init(context.getApplicationContext());
+        appContext = context;
+        RemoteTransfer.getInstance().init(context);
         initFlag.set(true);
     }
 

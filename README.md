@@ -82,7 +82,7 @@ allprojects {
 
 dependencies {
     ......
-    implementation "com.okay.supercross:supercross-api:1.1.0-SNAPSHOT"
+    implementation "com.okay.supercross:supercross-api:1.0.4-SNAPSHOT"
 }
 
 ```
@@ -152,17 +152,17 @@ public interface RemoteService {
 ```
 //本进程注册，所有进程都使用
 //远程服务
-SuperCross().registerRemoteService(RemoteService.class, new RemoteServiceImpl());
+SuperCross.registerRemoteService(RemoteService.class, new RemoteServiceImpl());
 //取消注册远程服务
-SuperCross().unregisterRemoteService(RemoteService.class);
+SuperCross.unregisterRemoteService(RemoteService.class);
 
 //本进程注册，仅在本进程使用：
 
 //注册本地服务，此时没有跨进程使用，无需考虑数据类型限制
-SuperCross().registerLocalService(RemoteService.class, new RemoteServiceImpl());
+SuperCross.registerLocalService(RemoteService.class, new RemoteServiceImpl());
 
 //取消注册本地服务
-SuperCross().unregisterLocalService(RemoteService.class);
+SuperCross.unregisterLocalService(RemoteService.class);
   
 ```
 
@@ -170,10 +170,10 @@ SuperCross().unregisterLocalService(RemoteService.class);
 
 ```
 //获取远程服务
-RemoteService service = SuperCross().getRemoteService(RemoteService.class);
+RemoteService service = SuperCross.getRemoteService(RemoteService.class);
 
 //获取本地服务
-//RemoteService service = SuperCross().getLocalService(RemoteService.class);
+//RemoteService service = SuperCross.getLocalService(RemoteService.class);
 
 //服务未注册时，service为null
 if(null!=service){
