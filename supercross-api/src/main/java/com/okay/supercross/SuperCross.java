@@ -67,7 +67,6 @@ public class SuperCross {
         LocalServiceManager.getInstance().registerService(interfaceClass.getCanonicalName(), serviceImpl);
     }
 
-
     /**
      * 获取本地服务
      * @param interfaceClass
@@ -99,13 +98,32 @@ public class SuperCross {
      * @param interfaceClass  业务服务接口类class
      * @param serviceImpl     业务接口实现类(参数只支持基础类型和序列号对象)
      */
-    public static  void registerRemoteService(Class<?> interfaceClass, Object serviceImpl) {
+    public static void registerRemoteService(Class<?> interfaceClass, Object serviceImpl) {
+        if (null == interfaceClass || null == serviceImpl) {
+            return;
+        }
+        registerRemoteService(interfaceClass,null,serviceImpl);
+    }
+
+
+    /**
+     * 注册远程服务
+     * @param interfaceClass  业务服务接口类class
+     * @param tag             附加标示（为支持多实现）
+     * @param serviceImpl     业务接口实现类(参数只支持基础类型和序列号对象)
+     */
+    public static void registerRemoteService(Class<?> interfaceClass,String tag,Object serviceImpl) {
         if (null == interfaceClass || null == serviceImpl) {
             return;
         }
         ServerInterface serverInterface = new ServerInterface(interfaceClass);
         TransformBinder stubBinder = new TransformBinder(serverInterface, serviceImpl);
-        RemoteTransfer.getInstance().registerStubService(interfaceClass.getCanonicalName(), stubBinder);
+
+        String key = interfaceClass.getCanonicalName();
+        if(!TextUtils.isEmpty(tag)){
+            key += "##" + tag;
+        }
+        RemoteTransfer.getInstance().registerStubService(key, stubBinder);
     }
 
 
@@ -114,20 +132,37 @@ public class SuperCross {
      * @param interfaceClass
      * @param <T>
      * @return
-     * TODO: 2019/6/30 后续需要考虑提升服务进程的优先级，可以使用 ConnectionManager.getInstance().bindAction 进行提升
      */
     public static synchronized <T> T getRemoteService(Class<?> interfaceClass) {
+        return getRemoteService(interfaceClass,null);
+    }
+
+    /**
+     * 获取远程服务
+     * @param interfaceClass
+     * @param tag             附加标示（为支持多实现）
+     * @param <T>
+     * @return
+     * TODO: 2019/6/30 后续需要考虑提升服务进程的优先级，可以使用 ConnectionManager.getInstance().bindAction 进行提升
+     */
+    public static synchronized <T> T getRemoteService(Class<?> interfaceClass,String tag) {
         if (null == interfaceClass) {
             return null;
         }
-        String serviceCanonicalName = interfaceClass.getCanonicalName();
-        Debugger.d("-->getRemoteService,serviceName:" + serviceCanonicalName);
-        if (TextUtils.isEmpty(serviceCanonicalName)) {
+        String key = interfaceClass.getCanonicalName();
+        if(!TextUtils.isEmpty(tag)){
+            key += "##" + tag;
+        }
+
+        Debugger.d("-->getRemoteService,serviceName:" + key);
+        if (TextUtils.isEmpty(key)) {
             return null;
         }
-        BinderBean binderBean = RemoteTransfer.getInstance().getRemoteServiceBean(serviceCanonicalName);
+
+
+        BinderBean binderBean = RemoteTransfer.getInstance().getRemoteServiceBean(key);
         if (binderBean == null) {
-            Debugger.e("Found no binder for "+serviceCanonicalName+"! Please check you have register implementation for it or proguard reasons!");
+            Debugger.e("Found no binder for "+key+"! Please check you have register implementation for it or proguard reasons!");
             return null;
         }
 
@@ -139,15 +174,31 @@ public class SuperCross {
         return (T) Proxy.newProxyInstance(interfaceClass.getClassLoader(), new Class[]{interfaceClass}, new InvocationBridge(serverInterface, binder));
     }
 
+
+
     /**
      * 取消注册的远程服务
      * @param interfaceClass
      */
     public static void unregisterRemoteService(Class<?> interfaceClass) {
+        unregisterRemoteService(interfaceClass,null);
+    }
+
+
+    /**
+     * 取消注册的远程服务
+     * @param interfaceClass  业务服务接口类class
+     * @param tag             附加标示（为支持多实现）
+     */
+    public static void unregisterRemoteService(Class<?> interfaceClass,String tag) {
         if (null == interfaceClass) {
             return;
         }
-        RemoteTransfer.getInstance().unregisterStubService(interfaceClass.getCanonicalName());
+        String key = interfaceClass.getCanonicalName();
+        if(!TextUtils.isEmpty(tag)){
+            key += "##" + tag;
+        }
+        RemoteTransfer.getInstance().unregisterStubService(key);
     }
 
 

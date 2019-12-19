@@ -52,7 +52,7 @@ ext {
 
     //supercross-api
     supercross_api = [
-            version : '1.0.4-SNAPSHOT',
+            version : '1.0.6-SNAPSHOT',
             group_id : "com.okay.supercross",
             artifact_id : "supercross-api",
             description : "Android supercross-api library"
