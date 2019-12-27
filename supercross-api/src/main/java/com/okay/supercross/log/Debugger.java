@@ -8,59 +8,89 @@ import android.util.Log;
  */
 public class Debugger {
     private static final String LOG_TAG = "OkSuperCross";
-    private static boolean sEnableLog = false;
+    private static int levelValue = Log.DEBUG;
 
+    private static LogDelegate logDelegate = DefaultLogDelegate.getInstance();
+
+    public static void setLogDelegate(LogDelegate delegate) {
+        if (delegate == null) {
+            throw new IllegalArgumentException();
+        }
+        logDelegate = delegate;
+    }
+    
     /**
-     * Log开关。建议测试环境开启，线上环境应该关闭。
+     * 设置日志等级
      */
-    public static void setEnableLog(boolean enableLog) {
-        sEnableLog = enableLog;
+    public static void setLogLevel(int level) {
+        levelValue = level;
     }
 
-    public static void d(String msg, Object... args) {
-        if (!sEnableLog) return;
+    private static boolean isLoggable(int level) {
+        return levelValue <= level;
+    }
+
+    public static void d(String tag, String msg, Object... args) {
         if (TextUtils.isEmpty(msg)) return;
-        Log.d(Debugger.LOG_TAG, format(msg, args));
+        if(isLoggable(Log.DEBUG)){
+            logDelegate.d(Debugger.LOG_TAG, format(tag,msg, args));
+        }
     }
 
-    public static void i(String msg, Object... args) {
-        if (!sEnableLog) return;
+    public static void i(String tag, String msg, Object... args) {
         if (TextUtils.isEmpty(msg)) return;
-        Log.i(Debugger.LOG_TAG, format(msg, args));
+        if(isLoggable(Log.INFO)){
+            logDelegate.i(Debugger.LOG_TAG, format(tag,msg, args));
+        }
     }
 
-    public static void w(String msg, Object... args) {
-        if (!sEnableLog) return;
+    public static void w(String tag, String msg, Object... args) {
         if (TextUtils.isEmpty(msg)) return;
-        Log.w(Debugger.LOG_TAG, format(msg, args));
+        if(isLoggable(Log.WARN)){
+            logDelegate.w(Debugger.LOG_TAG, format(tag,msg, args));
+        }
     }
 
-    public static void w(Throwable t) {
-        if (!sEnableLog) return;
-        if (t == null) return;
-        Log.w(Debugger.LOG_TAG, t);
-    }
 
-    public static void e(String msg, Object... args) {
-        if (!sEnableLog) return;
+    public static void e(String tag, String msg, Object... args) {
         if (TextUtils.isEmpty(msg)) return;
-        Log.e(Debugger.LOG_TAG, format(msg, args));
+        if(isLoggable(Log.ERROR)){
+            logDelegate.e(Debugger.LOG_TAG, format(tag,msg, args));
+        }
     }
 
-    public static void e(Throwable t) {
-        if (!sEnableLog) return;
-        if (t == null) return;
-        Log.e(Debugger.LOG_TAG, "", t);
+    public static void e(String tag, String msg, Throwable tr) {
+        if (tr == null) return;
+        if(isLoggable(Log.ERROR)){
+            logDelegate.e(Debugger.LOG_TAG, format(tag,msg),tr);
+        }
     }
 
-    private static String format(String msg, Object... args) {
+    public static void e(String tag, Throwable tr) {
+        if (tr == null) return;
+        if(isLoggable(Log.ERROR)){
+            logDelegate.e(Debugger.LOG_TAG, format(tag,null),tr);
+        }
+    }
+
+    private static String format(String tag, String msg, Object... args) {
         if (args != null && args.length > 0) {
             try {
-                return String.format(msg, args);
-            } catch (Throwable t) {
-                e(t);
+                return String.format(getComposeInfo(tag,msg), args);
+            } catch (Throwable tr) {
+                tr.printStackTrace();
             }
         }
-        return msg;
+        return getComposeInfo(tag,msg);
+    }
+
+    private static String getComposeInfo(String tag, String info) {
+        String composeInfo = null;
+        if(!TextUtils.isEmpty(tag) && !TextUtils.isEmpty(info)){
+            composeInfo = tag + "-->" + info;
+        }else {
+            composeInfo = !TextUtils.isEmpty(info)?info:tag;
+        }
+        return composeInfo;
     }
 }

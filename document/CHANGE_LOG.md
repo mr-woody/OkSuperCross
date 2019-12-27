@@ -1,5 +1,11 @@
 ## Changelog
 
+### supercross-api 1.0.7
+> 时间:2019/12/27(周五)
+
+* 完善Debugger日志输出信息
+* 提供Log扩展接口，方便做日志输出定制（不设置，默认使用DefaultLogDelegate),调用Debugger.setLogDelegate(delegate); 
+
 ### 1.0.3
 > 时间:2019/9/07(周六)
 

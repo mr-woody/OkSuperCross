@@ -14,6 +14,7 @@ import com.okay.supercross.log.Debugger;
 import com.okay.supercross.utils.ProcessUtils;
 
 public class DispatcherService extends Service {
+    private static final String TAG = DispatcherService.class.getSimpleName();
     public DispatcherService() {
     }
 
@@ -25,7 +26,7 @@ public class DispatcherService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
-        Debugger.d("DispatcherService-->onCreate(),currentProcess:" + ProcessUtils.getProcessName(android.os.Process.myPid()));
+        Debugger.d(TAG,"onCreate(),currentPid:" + android.os.Process.myPid());
     }
 
     @Override
@@ -33,7 +34,7 @@ public class DispatcherService extends Service {
         if (intent == null) {
             return super.onStartCommand(intent, flags, startId);
         }
-        Debugger.d("DispatcherService-->onStartCommand,action:" + intent.getAction());
+        Debugger.d(TAG,"onStartCommand,action:" + intent.getAction());
         if (Constants.DISPATCH_REGISTER_SERVICE_ACTION.equals(intent.getAction())) {
             registerRemoteService(intent);
         } else if (Constants.DISPATCH_UNREGISTER_SERVICE_ACTION.equals(intent.getAction())) {
@@ -53,7 +54,7 @@ public class DispatcherService extends Service {
         try {
             Dispatcher.getInstance().publish(event);
         } catch (RemoteException ex) {
-            ex.printStackTrace();
+           Debugger.e(TAG,ex);
         }
     }
 
@@ -64,20 +65,20 @@ public class DispatcherService extends Service {
      * @param transterBinder
      */
     private void registerAndReverseRegister(int pid, IBinder transterBinder) {
-        Debugger.d("DispatcherService-->registerAndReverseRegister,pid=" + pid + ",processName:" + ProcessUtils.getProcessName(pid));
+        Debugger.d(TAG,"registerAndReverseRegister,pid=" + pid + ",processName:" + ProcessUtils.getProcessName(pid));
         IRemoteTransfer remoteTransfer = IRemoteTransfer.Stub.asInterface(transterBinder);
 
         Dispatcher.getInstance().registerRemoteTransfer(pid, transterBinder);
 
         if (remoteTransfer != null) {
-            Debugger.d("now register to RemoteTransfer");
+            Debugger.d(TAG,"now register to RemoteTransfer");
             try {
                 remoteTransfer.registerDispatcher(Dispatcher.getInstance().asBinder());
             } catch (RemoteException ex) {
-                ex.printStackTrace();
+               Debugger.e(TAG,ex);
             }
         } else {
-            Debugger.d("IdspatcherRegister IBinder is null");
+            Debugger.d(TAG,"dispatcherRegister IBinder is null");
         }
     }
 
@@ -89,7 +90,7 @@ public class DispatcherService extends Service {
         try {
             //说明是RemoteTransfer.sendRegisterInfo()，传递过来的数据
             if (TextUtils.isEmpty(serviceCanonicalName)) {
-                Debugger.e("service canonical name is null");
+                Debugger.d(TAG,"registerRemoteService,The description is the data passed from RemoteTransfer.sendRegisterInfo()");
             } else {
                 BinderWrapper businessWrapper = intent.getParcelableExtra(Constants.KEY_BUSINESS_BINDER_WRAPPER);
                 String processName = intent.getStringExtra(Constants.KEY_PROCESS_NAME);
@@ -97,7 +98,7 @@ public class DispatcherService extends Service {
                         processName, businessWrapper.getBinder());
             }
         } catch (RemoteException ex) {
-            ex.printStackTrace();
+            Debugger.e(TAG,ex);
         } finally {
             if (wrapper != null) {
                 registerAndReverseRegister(pid, wrapper.getBinder());
@@ -111,7 +112,7 @@ public class DispatcherService extends Service {
         try {
             Dispatcher.getInstance().unregisterRemoteService(serviceCanonicalName);
         } catch (RemoteException ex) {
-            ex.printStackTrace();
+           Debugger.e(TAG,ex);
         }
     }
 }

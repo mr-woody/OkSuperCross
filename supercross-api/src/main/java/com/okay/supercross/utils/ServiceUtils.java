@@ -7,6 +7,7 @@ import android.content.ServiceConnection;
 import com.okay.supercross.log.Debugger;
 
 public class ServiceUtils {
+    private static final String TAG = ServiceUtils.class.getSimpleName();
 
     /**
      * 考虑到Android 8.0在后台调用startService时会抛出IllegalStateException
@@ -21,7 +22,7 @@ public class ServiceUtils {
         try {
             context.startService(intent);
         } catch (IllegalStateException ex) {
-            ex.printStackTrace();
+           Debugger.e(TAG,ex);
         }
     }
 
@@ -32,8 +33,7 @@ public class ServiceUtils {
         try {
             context.unbindService(connection);
         } catch (Exception ex) {
-            Debugger.e("unbind service exception:" + ex.getMessage());
-            ex.printStackTrace();
+            Debugger.e(TAG,"unbind service exception:" + ex.getMessage());
         }
     }
 

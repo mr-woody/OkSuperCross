@@ -12,12 +12,12 @@ import java.util.concurrent.ConcurrentHashMap;
 
 
 public class EventDispatcher implements IEventDispatcher {
-
+    private static final String TAG = EventDispatcher.class.getSimpleName();
     private Map<Integer, IBinder> transferBinders = new ConcurrentHashMap<>();
 
     @Override
     public void registerRemoteTransferLocked(final int pid, IBinder transferBinder) {
-        Debugger.d("EventDispatcher-->registerRemoteTransferLocked,pid:" + pid);
+        Debugger.d(TAG,"registerRemoteTransferLocked,pid:" + pid+ ",currentPid:" + android.os.Process.myPid() + ",thread:" + Thread.currentThread().getName());
         if (transferBinder == null) {
             return;
         }
@@ -29,7 +29,7 @@ public class EventDispatcher implements IEventDispatcher {
                 }
             }, 0);
         } catch (RemoteException ex) {
-            ex.printStackTrace();
+            Debugger.e(TAG,ex);
         } finally {
             transferBinders.put(pid, transferBinder);
         }
@@ -38,43 +38,31 @@ public class EventDispatcher implements IEventDispatcher {
 
     @Override
     public void publishLocked(Event event) throws RemoteException {
-        Debugger.d("EventDispatcher-->publishLocked,event.name:" + event.getName());
-        RemoteException ex = null;
+        Debugger.d(TAG,"publishLocked,event.name:" + event.getName()+ ",currentPid:" + android.os.Process.myPid() + ",thread:" + Thread.currentThread().getName());
         for (Map.Entry<Integer, IBinder> entry : transferBinders.entrySet()) {
             IRemoteTransfer transfer = IRemoteTransfer.Stub.asInterface(entry.getValue());
-            //对于这种情况，如果有一个出现RemoteException,也不能就停下?
             if (null != transfer) {
                 try {
                     transfer.notify(event);
                 } catch (RemoteException e) {
-                    e.printStackTrace();
-                    ex = e;
+                    Debugger.e(TAG,e);
                 }
             }
         }
-        if (null != ex) {
-            throw ex;
-        }
-
     }
 
     @Override
     public void unregisterRemoteServiceLocked(String serviceCanonicalName) throws RemoteException {
-        Debugger.d("EventDispatcher-->unregisterRemoteServiceLocked,serviceCanonicalName:" + serviceCanonicalName);
-        RemoteException e = null;
+        Debugger.d(TAG,"unregisterRemoteServiceLocked,serviceCanonicalName:" + serviceCanonicalName+ ",currentPid:" + android.os.Process.myPid() + ",thread:" + Thread.currentThread().getName());
         for (Map.Entry<Integer, IBinder> entry : transferBinders.entrySet()) {
             IRemoteTransfer transfer = IRemoteTransfer.Stub.asInterface(entry.getValue());
             if (null != transfer) {
                 try {
                     transfer.unregisterRemoteService(serviceCanonicalName);
                 } catch (RemoteException ex) {
-                    ex.printStackTrace();
-                    e = ex;
+                    Debugger.e(TAG,ex);
                 }
             }
-        }
-        if (null != e) {
-            throw e;
         }
     }
 }

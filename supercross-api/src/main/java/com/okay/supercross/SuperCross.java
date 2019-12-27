@@ -3,16 +3,19 @@ package com.okay.supercross;
 import android.content.Context;
 import android.os.IBinder;
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.okay.supercross.bean.BinderBean;
 import com.okay.supercross.event.Event;
 import com.okay.supercross.event.EventCallback;
 import com.okay.supercross.local.LocalServiceManager;
 import com.okay.supercross.log.Debugger;
+import com.okay.supercross.log.LogDelegate;
 import com.okay.supercross.transfer.RemoteTransfer;
 import com.okay.supercross.transfer.method.InvocationBridge;
 import com.okay.supercross.transfer.method.ServerInterface;
 import com.okay.supercross.transfer.method.TransformBinder;
+import com.okay.supercross.utils.ProcessUtils;
 
 import java.lang.reflect.Proxy;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -21,8 +24,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
  * 跨进程通信主入口类
  */
 public class SuperCross {
-
-    private static final String TAG = "SuperCross";
+    private static final String TAG = SuperCross.class.getSimpleName();
 
     private static Context appContext;
 
@@ -39,6 +41,7 @@ public class SuperCross {
         appContext = context;
         RemoteTransfer.getInstance().init(context);
         initFlag.set(true);
+        Debugger.d(TAG,"init(),currentPid:" + android.os.Process.myPid() + ",processName:" + ProcessUtils.getProcessName(context) + ",thread:" + Thread.currentThread().getName());
     }
 
     public static Context getAppContext() {
@@ -51,7 +54,15 @@ public class SuperCross {
      * @param isEnable
      */
     public static void setEnableLog(boolean isEnable) {
-        Debugger.setEnableLog(isEnable);
+        Debugger.setLogLevel(isEnable? Log.DEBUG:Log.ASSERT);
+    }
+
+    /**
+     * Log扩展接口，方便做日志输出定制（不设置，默认使用DefaultLogDelegate）
+     * @param delegate
+     */
+    public static void setLogDelegate(LogDelegate delegate) {
+        Debugger.setLogDelegate(delegate);
     }
 
 
@@ -61,11 +72,27 @@ public class SuperCross {
      * @param serviceImpl
      */
     public static void registerLocalService(Class<?> interfaceClass, Object serviceImpl) {
+        registerLocalService(interfaceClass,serviceImpl,null);
+    }
+
+    /**
+     * 注册本地服务(注册的进程本地服务需要在本进程取消注册)
+     * @param interfaceClass
+     * @param serviceImpl
+     * @param tag             附加标示（为支持多实现）
+     */
+    public static void registerLocalService(Class<?> interfaceClass, Object serviceImpl,String tag) {
         if (null == interfaceClass || null == serviceImpl) {
             return;
         }
-        LocalServiceManager.getInstance().registerService(interfaceClass.getCanonicalName(), serviceImpl);
+        String key = interfaceClass.getCanonicalName();
+        if(!TextUtils.isEmpty(tag)){
+            key += "##" + tag;
+        }
+        Debugger.d(TAG,"registerLocalService:key = "+ key +",serviceImpl="+ (serviceImpl!=null?serviceImpl.toString():null) +", currentPid:" + android.os.Process.myPid() + ",processName:" + ProcessUtils.getProcessName(getAppContext()) + ",thread:" + Thread.currentThread().getName());
+        LocalServiceManager.getInstance().registerService(key, serviceImpl);
     }
+
 
     /**
      * 获取本地服务
@@ -74,10 +101,27 @@ public class SuperCross {
      * @return
      */
     public static <T> T getLocalService(Class<?> interfaceClass) {
+        return getLocalService(interfaceClass,null);
+    }
+
+    /**
+     * 获取本地服务
+     * @param interfaceClass
+     * @param tag             附加标示（为支持多实现）
+     * @return
+     */
+    public static <T> T getLocalService(Class<?> interfaceClass,String tag) {
         if (null == interfaceClass) {
             return null;
         }
-        return (T) LocalServiceManager.getInstance().getLocalService(interfaceClass.getCanonicalName());
+        String key = interfaceClass.getCanonicalName();
+        if(!TextUtils.isEmpty(tag)){
+            key += "##" + tag;
+        }
+
+        T serviceImpl = (T) LocalServiceManager.getInstance().getLocalService(key);
+        Debugger.i(TAG,"getLocalService:key = "+ key +",serviceImpl="+ (serviceImpl!=null?serviceImpl.toString():null) +", currentPid:" + android.os.Process.myPid() + ",processName:" + ProcessUtils.getProcessName(getAppContext()) + ",thread:" + Thread.currentThread().getName());
+        return serviceImpl;
     }
 
 
@@ -86,10 +130,24 @@ public class SuperCross {
      * @param interfaceClass
      */
     public static void unregisterLocalService(Class<?> interfaceClass) {
+        unregisterLocalService(interfaceClass,null);
+    }
+
+    /**
+     * 取消注册本地服务
+     * @param interfaceClass
+     * @param tag             附加标示（为支持多实现）
+     */
+    public static void unregisterLocalService(Class<?> interfaceClass,String tag) {
         if (null == interfaceClass) {
             return;
         }
-        LocalServiceManager.getInstance().unregisterService(interfaceClass.getCanonicalName());
+        String key = interfaceClass.getCanonicalName();
+        if(!TextUtils.isEmpty(tag)){
+            key += "##" + tag;
+        }
+        Debugger.i(TAG,"unregisterLocalService:key = "+ key +", currentPid:" + android.os.Process.myPid() + ",processName:" + ProcessUtils.getProcessName(getAppContext()) + ",thread:" + Thread.currentThread().getName());
+        LocalServiceManager.getInstance().unregisterService(key);
     }
 
 
@@ -99,9 +157,6 @@ public class SuperCross {
      * @param serviceImpl     业务接口实现类(参数只支持基础类型和序列号对象)
      */
     public static void registerRemoteService(Class<?> interfaceClass, Object serviceImpl) {
-        if (null == interfaceClass || null == serviceImpl) {
-            return;
-        }
         registerRemoteService(interfaceClass,null,serviceImpl);
     }
 
@@ -123,6 +178,7 @@ public class SuperCross {
         if(!TextUtils.isEmpty(tag)){
             key += "##" + tag;
         }
+        Debugger.i(TAG,"registerRemoteService:key = "+ key +",serviceImpl="+ (serviceImpl!=null?stubBinder.toString():null) +", currentPid:" + android.os.Process.myPid() + ",processName:" + ProcessUtils.getProcessName(getAppContext()) + ",thread:" + Thread.currentThread().getName());
         RemoteTransfer.getInstance().registerStubService(key, stubBinder);
     }
 
@@ -143,7 +199,6 @@ public class SuperCross {
      * @param tag             附加标示（为支持多实现）
      * @param <T>
      * @return
-     * TODO: 2019/6/30 后续需要考虑提升服务进程的优先级，可以使用 ConnectionManager.getInstance().bindAction 进行提升
      */
     public static synchronized <T> T getRemoteService(Class<?> interfaceClass,String tag) {
         if (null == interfaceClass) {
@@ -154,24 +209,21 @@ public class SuperCross {
             key += "##" + tag;
         }
 
-        Debugger.d("-->getRemoteService,serviceName:" + key);
-        if (TextUtils.isEmpty(key)) {
-            return null;
-        }
-
-
         BinderBean binderBean = RemoteTransfer.getInstance().getRemoteServiceBean(key);
         if (binderBean == null) {
-            Debugger.e("Found no binder for "+key+"! Please check you have register implementation for it or proguard reasons!");
+            Debugger.w(TAG,"Found no binder for "+key+"! Please check you have register implementation for it or proguard reasons!");
             return null;
         }
 
         ServerInterface serverInterface = new ServerInterface(interfaceClass);
         IBinder binder = binderBean.getBinder();
         if (binder == null) {
+            Debugger.w(TAG,"Found no server IBinder,Please check you have register implementation (ServerInterface("+key+"))!");
             return null;
         }
-        return (T) Proxy.newProxyInstance(interfaceClass.getClassLoader(), new Class[]{interfaceClass}, new InvocationBridge(serverInterface, binder));
+        T serviceImpl = (T) Proxy.newProxyInstance(interfaceClass.getClassLoader(), new Class[]{interfaceClass}, new InvocationBridge(serverInterface, binder));
+        Debugger.i(TAG,"getRemoteService:key = "+ key +",serviceImpl="+ (serviceImpl!=null?binder.toString():null) +", currentPid:" + android.os.Process.myPid() + ",processName:" + ProcessUtils.getProcessName(getAppContext()) + ",thread:" + Thread.currentThread().getName());
+        return serviceImpl;
     }
 
 
@@ -198,6 +250,7 @@ public class SuperCross {
         if(!TextUtils.isEmpty(tag)){
             key += "##" + tag;
         }
+        Debugger.i(TAG,"unregisterRemoteService:key = "+ key +", currentPid:" + android.os.Process.myPid() + ",processName:" + ProcessUtils.getProcessName(getAppContext()) + ",thread:" + Thread.currentThread().getName());
         RemoteTransfer.getInstance().unregisterStubService(key);
     }
 
@@ -211,6 +264,7 @@ public class SuperCross {
         if (TextUtils.isEmpty(name)) {
             return;
         }
+        Debugger.i(TAG,"subscribe:key = "+ name +", currentPid:" + android.os.Process.myPid() + ",processName:" + ProcessUtils.getProcessName(getAppContext()) + ",thread:" + Thread.currentThread().getName());
         RemoteTransfer.getInstance().subscribeEvent(name, listener);
     }
 
@@ -222,6 +276,7 @@ public class SuperCross {
         if (null == listener) {
             return;
         }
+        Debugger.i(TAG,"unsubscribe:listener = "+ listener.toString() +", currentPid:" + android.os.Process.myPid() + ",processName:" + ProcessUtils.getProcessName(getAppContext()) + ",thread:" + Thread.currentThread().getName());
         RemoteTransfer.getInstance().unsubscribeEvent(listener);
     }
 
@@ -233,6 +288,7 @@ public class SuperCross {
         if (null == key) {
             return;
         }
+        Debugger.i(TAG,"unsubscribe:key = "+ key +", currentPid:" + android.os.Process.myPid() + ",processName:" + ProcessUtils.getProcessName(getAppContext()) + ",thread:" + Thread.currentThread().getName());
         RemoteTransfer.getInstance().unsubscribeEvent(key);
     }
 
@@ -244,6 +300,7 @@ public class SuperCross {
         if (null == event) {
             return;
         }
+        Debugger.i(TAG,"publish:event = "+ event.toString() +", currentPid:" + android.os.Process.myPid() + ",processName:" + ProcessUtils.getProcessName(getAppContext()) + ",thread:" + Thread.currentThread().getName());
         RemoteTransfer.getInstance().publish(event);
     }
 }

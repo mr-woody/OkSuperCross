@@ -20,7 +20,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 
 public class RemoteServiceTransfer {
-
+    private static final String TAG = RemoteServiceTransfer.class.getSimpleName();
     /**
      * 本地的Binder,需要给其他进程使用的,key为inteface的完整名称
      */
@@ -28,8 +28,7 @@ public class RemoteServiceTransfer {
 
     private Map<String, BinderBean> remoteBinderCache = new ConcurrentHashMap<>();
 
-    public void registerStubServiceLocked(String serviceCanonicalName, IBinder stubBinder,
-                                          Context context, IDispatcher dispatcherProxy, IRemoteTransfer.Stub stub) {
+    public void registerStubServiceLocked(Context context,String serviceCanonicalName, IBinder stubBinder, IDispatcher dispatcherProxy, IRemoteTransfer.Stub stub) {
         stubBinderCache.put(serviceCanonicalName, stubBinder);
         if (dispatcherProxy == null) {
             BinderWrapper wrapper = new BinderWrapper(stub.asBinder());
@@ -38,19 +37,19 @@ public class RemoteServiceTransfer {
             intent.putExtra(Constants.KEY_REMOTE_TRANSFER_WRAPPER, wrapper);
             intent.putExtra(Constants.KEY_BUSINESS_BINDER_WRAPPER, new BinderWrapper(stubBinder));
             intent.putExtra(Constants.KEY_SERVICE_NAME, serviceCanonicalName);
-            setProcessInfo(intent, context);
+            setProcessInfo(context,intent);
             ServiceUtils.startServiceSafely(context, intent);
         } else {
             try {
                 dispatcherProxy.registerRemoteService(serviceCanonicalName,
                         ProcessUtils.getProcessName(context), stubBinder);
             } catch (RemoteException ex) {
-                ex.printStackTrace();
+                Debugger.e(TAG,ex);
             }
         }
     }
 
-    private void setProcessInfo(Intent intent, Context context) {
+    private void setProcessInfo(Context context,Intent intent) {
         intent.putExtra(Constants.KEY_PID, android.os.Process.myPid());
         intent.putExtra(Constants.KEY_PROCESS_NAME, ProcessUtils.getProcessName(context));
     }
@@ -59,11 +58,11 @@ public class RemoteServiceTransfer {
      * 思考:其实是不是不用这么麻烦，直接利用事件通知机制进行通知就可以了吧？
      * 可以是可以，但是逻辑上就不那么清晰了，而且要写很多的if语句，可读性和可维护性也差了。
      *
-     * @param serviceCanonicalName
      * @param context
+     * @param serviceCanonicalName
      * @param dispatcherProxy
      */
-    public void unregisterStubServiceLocked(String serviceCanonicalName, Context context, IDispatcher dispatcherProxy) {
+    public void unregisterStubServiceLocked(Context context, String serviceCanonicalName, IDispatcher dispatcherProxy) {
         //第一步，清除本地的缓存
         clearStubBinderCache(serviceCanonicalName);
         //第二步，通知Dispatcher,然后让Dispatcher通知各进程
@@ -76,7 +75,7 @@ public class RemoteServiceTransfer {
             try {
                 dispatcherProxy.unregisterRemoteService(serviceCanonicalName);
             } catch (RemoteException ex) {
-                ex.printStackTrace();
+                Debugger.e(TAG,ex);
             }
         }
     }
@@ -108,13 +107,13 @@ public class RemoteServiceTransfer {
                     }
                 }, 0);
             } catch (RemoteException ex) {
-                ex.printStackTrace();
+                Debugger.e(TAG,ex);
             }
-            Debugger.d("get IBinder from ServiceDispatcher");
+            Debugger.d(TAG,"get IBinder from ServiceDispatcher");
             remoteBinderCache.put(serviceName, binderBean);
             return binderBean;
         } catch (RemoteException ex) {
-            ex.printStackTrace();
+            Debugger.e(TAG,ex);
         }
         return null;
     }

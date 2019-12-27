@@ -10,6 +10,7 @@ import com.okay.supercross.log.Debugger;
 
 
 public class DispatcherProvider extends ContentProvider {
+    private static final String TAG = DispatcherProvider.class.getSimpleName();
 
     public static final String PROJECTION_MAIN[] = {"main"};
 
@@ -31,7 +32,7 @@ public class DispatcherProvider extends ContentProvider {
      */
     @Override
     public Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder) {
-        Debugger.d("DispatcherProvider-->query,uri:" + uri.getAuthority());
+        Debugger.d(TAG,"query,uri:" + uri.getAuthority());
         return DispatcherCursor.generateCursor(Dispatcher.getInstance().asBinder());
     }
 

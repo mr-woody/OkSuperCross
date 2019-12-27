@@ -23,11 +23,12 @@ import java.util.Map;
 
 
 public class EventTransfer {
+    private static final String TAG = EventTransfer.class.getSimpleName();
 
     private Map<String, List<WeakReference<EventCallback>>> eventListeners = new HashMap<>();
 
     public void subscribeEventLocked(String name, EventCallback listener) {
-        Debugger.d("RemoteTransfer-->subscribe,name:" + name);
+        Debugger.d(TAG,"subscribeEventLocked,name:" + name);
         if (TextUtils.isEmpty(name) || listener == null) {
             return;
         }
@@ -58,8 +59,8 @@ public class EventTransfer {
     }
 
 
-    public void publishLocked(Event event, IDispatcher dispatcherProxy, IRemoteTransfer.Stub stub, Context context) {
-        Debugger.d("EventTransfer-->publishLocked,event.name:" + event.getName());
+    public void publishLocked(Context context,Event event, IDispatcher dispatcherProxy, IRemoteTransfer.Stub stub) {
+        Debugger.d(TAG,"publishLocked,event.name:" + event.getName());
         if (null == dispatcherProxy) {
             BinderWrapper wrapper = new BinderWrapper(stub.asBinder());
             Intent intent = new Intent(context, DispatcherService.class);
@@ -72,16 +73,16 @@ public class EventTransfer {
             try {
                 dispatcherProxy.publish(event);
             } catch (RemoteException ex) {
-                ex.printStackTrace();
+               Debugger.e(TAG,ex);
             }
         }
     }
 
     public void notifyLocked(Event event) {
-        Debugger.d("EventTransfer-->notifyLocked,pid:" + android.os.Process.myPid() + ",event.name:" + event.getName());
+        Debugger.d(TAG,"notifyLocked,currentPid:" + android.os.Process.myPid() + ",event.name:" + event.getName());
         List<WeakReference<EventCallback>> listeners = eventListeners.get(event.getName());
         if (listeners == null) {
-            Debugger.d("There is no listeners for " + event.getName() + " in pid " + android.os.Process.myPid());
+            Debugger.d(TAG,"There is no listeners for " + event.getName() + " in currentPid " + android.os.Process.myPid());
             return;
         }
         for (int i = listeners.size() - 1; i >= 0; --i) {

@@ -13,7 +13,7 @@ import java.util.List;
 
 
 public class ProcessUtils {
-
+    private static final String TAG = ProcessUtils.class.getSimpleName();
     private static String sProcessName;
 
     public static boolean isMainProcess(Context context) {
@@ -56,14 +56,14 @@ public class ProcessUtils {
             }
             return processName;
         } catch (Exception e) {
-            Debugger.e("getProcessName read is fail. exception=" + e);
+            Debugger.e(TAG,"getProcessName read is fail. exception=" + e.getMessage());
         } finally {
             try {
                 if (reader != null) {
                     reader.close();
                 }
             } catch (IOException e) {
-                Debugger.e("getProcessName close is fail. exception=" + e);
+                Debugger.e(TAG,"getProcessName close is fail. exception=" +  e.getMessage());
             }
         }
         return null;

@@ -24,13 +24,12 @@ import com.okay.supercross.utils.ServiceUtils;
 
 
 public class RemoteTransfer extends IRemoteTransfer.Stub {
+    private static final String TAG = RemoteTransfer.class.getSimpleName();
 
     public static final int MAX_WAIT_TIME = 600;
 
     private static RemoteTransfer sInstance;
-
     private Context context;
-
     private IDispatcher dispatcherProxy;
 
     private RemoteServiceTransfer serviceTransfer;
@@ -81,7 +80,7 @@ public class RemoteTransfer extends IRemoteTransfer.Stub {
         if (null == dispatcherProxy) {
             IBinder dispatcherBinder = getIBinderFromProvider();
             if (null != dispatcherBinder) {
-                Debugger.d("the binder from provider is not null");
+                Debugger.d(TAG,"the binder from provider is not null");
                 dispatcherProxy = IDispatcher.Stub.asInterface(dispatcherBinder);
                 registerCurrentTransfer();
             }
@@ -91,14 +90,13 @@ public class RemoteTransfer extends IRemoteTransfer.Stub {
             try {
                 wait(MAX_WAIT_TIME);
             } catch (InterruptedException ex) {
-                Debugger.e("Attention! Wait out of time!");
-                ex.printStackTrace();
+                Debugger.e(TAG,"Attention! Wait out of time!,Exception:"+ex.getMessage());
             }
         }
     }
 
     public synchronized BinderBean getRemoteServiceBean(String serviceCanonicalName) {
-        Debugger.d("RemoteTransfer-->getRemoteServiceBean,pid=" + android.os.Process.myPid() + ",thread:" + Thread.currentThread().getName());
+        Debugger.d(TAG,"getRemoteServiceBean,currentPid=" + android.os.Process.myPid() + ",thread:" + Thread.currentThread().getName());
         BinderBean cacheBinderBean = serviceTransfer.getIBinderFromCache(context, serviceCanonicalName);
         if (cacheBinderBean != null) {
             return cacheBinderBean;
@@ -114,7 +112,7 @@ public class RemoteTransfer extends IRemoteTransfer.Stub {
         try {
             dispatcherProxy.registerRemoteTransfer(android.os.Process.myPid(), this.asBinder());
         } catch (RemoteException ex) {
-            ex.printStackTrace();
+            Debugger.e(TAG,ex);
         }
     }
 
@@ -123,7 +121,7 @@ public class RemoteTransfer extends IRemoteTransfer.Stub {
     }
 
     private IBinder getIBinderFromProvider() {
-        Debugger.d("RemoteTransfer-->getIBinderFromProvider()");
+        Debugger.d(TAG,"getIBinderFromProvider()");
         Cursor cursor = null;
         try {
             cursor = context.getContentResolver().query(getDispatcherProviderUri(), DispatcherProvider.PROJECTION_MAIN,
@@ -138,14 +136,14 @@ public class RemoteTransfer extends IRemoteTransfer.Stub {
                     cursor.close();
                 }
             } catch (Exception ex) {
-                ex.printStackTrace();
+                Debugger.e(TAG,ex);
             }
         }
     }
 
     public synchronized void registerStubService(String serviceCanonicalName, IBinder stubBinder) {
         initDispatchProxyLocked();
-        serviceTransfer.registerStubServiceLocked(serviceCanonicalName, stubBinder, context, dispatcherProxy, this);
+        serviceTransfer.registerStubServiceLocked(context,serviceCanonicalName, stubBinder,  dispatcherProxy, this);
     }
 
     /**
@@ -156,7 +154,7 @@ public class RemoteTransfer extends IRemoteTransfer.Stub {
      */
     public synchronized void unregisterStubService(String serviceCanonicalName) {
         initDispatchProxyLocked();
-        serviceTransfer.unregisterStubServiceLocked(serviceCanonicalName, context, dispatcherProxy);
+        serviceTransfer.unregisterStubServiceLocked(context,serviceCanonicalName, dispatcherProxy);
     }
 
 
@@ -177,17 +175,17 @@ public class RemoteTransfer extends IRemoteTransfer.Stub {
 
     public synchronized void publish(Event event) {
         initDispatchProxyLocked();
-        eventTransfer.publishLocked(event, dispatcherProxy, this, context);
+        eventTransfer.publishLocked(context,event, dispatcherProxy, this);
     }
 
 
     public synchronized void registerDispatcher(IBinder dispatcherBinder) throws RemoteException {
-        Debugger.d("RemoteTransfer-->registerDispatcher");
+        Debugger.d(TAG,"registerDispatcher");
         //一般从发出注册信息到这里回调就6ms左右，所以绝大部分时候走的都是这个逻辑。
         dispatcherBinder.linkToDeath(new IBinder.DeathRecipient() {
             @Override
             public void binderDied() {
-                Debugger.d("RemoteTransfer-->dispatcherBinder binderDied");
+                Debugger.d(TAG,"dispatcherBinder binderDied");
                 resetDispatcherProxy();
             }
         }, 0);
@@ -206,7 +204,7 @@ public class RemoteTransfer extends IRemoteTransfer.Stub {
      * @throws RemoteException
      */
     public synchronized void unregisterRemoteService(String serviceCanonicalName) throws RemoteException {
-        Debugger.d("RemoteTransfer-->unregisterRemoteServiceLocked,pid:" + android.os.Process.myPid() + ",serviceName:" + serviceCanonicalName);
+        Debugger.d(TAG,"unregisterRemoteServiceLocked,currentPid:" + android.os.Process.myPid() + ",serviceName:" + serviceCanonicalName);
         serviceTransfer.clearRemoteBinderCacheLocked(serviceCanonicalName);
     }
 
