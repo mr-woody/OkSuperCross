@@ -59,7 +59,7 @@ buildscript {
     }
     dependencies {
         ......
-        classpath 'com.okay.supercross.plugin:supercross-plugin:1.0.3-SNAPSHOT'
+        classpath 'com.okay.supercross.plugin:supercross-plugin:1.1.0-SNAPSHOT'
     }
 }
 ```
@@ -82,7 +82,7 @@ allprojects {
 
 dependencies {
     ......
-    implementation "com.okay.supercross:supercross-api:1.0.4-SNAPSHOT"
+    implementation "com.okay.supercross:supercross-api:1.0.8-SNAPSHOT"
 }
 
 ```
@@ -142,11 +142,6 @@ protected void onCreate() {
       @Override
       public void e(String tag, String msg, Throwable tr) {
           Log.e(tag, msg, tr);
-      }
-    
-      @Override
-      public void e(String tag, String msg) {
-          Log.e(tag, msg);
       }
     });
      */

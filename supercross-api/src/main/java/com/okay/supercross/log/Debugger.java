@@ -55,7 +55,7 @@ public class Debugger {
     public static void e(String tag, String msg, Object... args) {
         if (TextUtils.isEmpty(msg)) return;
         if(isLoggable(Log.ERROR)){
-            logDelegate.e(Debugger.LOG_TAG, format(tag,msg, args));
+            logDelegate.e(Debugger.LOG_TAG, format(tag,msg, args),null);
         }
     }
 

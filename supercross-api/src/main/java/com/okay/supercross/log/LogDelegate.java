@@ -1,5 +1,7 @@
 package com.okay.supercross.log;
 
+import android.support.annotation.Nullable;
+
 public interface LogDelegate {
 
 
@@ -40,7 +42,5 @@ public interface LogDelegate {
      * @param msg The message you would like logged.
      * @param tr  An exception to log
      */
-    void e(String tag, String msg, Throwable tr);
-
-    void e(String tag, String msg);
+    void e(String tag, String msg,@Nullable Throwable tr);
 }

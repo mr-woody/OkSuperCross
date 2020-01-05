@@ -1,11 +1,9 @@
 package com.plug.common.application;
 
 import android.app.Application;
-import android.util.Log;
 
 import com.okay.supercross.BuildConfig;
 import com.okay.supercross.SuperCross;
-import com.okay.supercross.log.LogDelegate;
 
 public class BaseApplication extends Application {
 
@@ -42,10 +40,6 @@ public class BaseApplication extends Application {
                 Log.e(tag, msg, tr);
             }
 
-            @Override
-            public void e(String tag, String msg) {
-                Log.e(tag, msg);
-            }
         });
         */
         SuperCross.init(this);

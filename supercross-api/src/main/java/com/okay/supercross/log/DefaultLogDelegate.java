@@ -38,8 +38,4 @@ public class DefaultLogDelegate implements LogDelegate {
         Log.e(tag, msg, tr);
     }
 
-    @Override
-    public void e(String tag, String msg) {
-        Log.e(tag, msg);
-    }
 }
