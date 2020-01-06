@@ -65,7 +65,7 @@ public class DispatcherService extends Service {
      * @param transterBinder
      */
     private void registerAndReverseRegister(int pid, IBinder transterBinder) {
-        Debugger.d(TAG,"registerAndReverseRegister,pid=" + pid + ",processName:" + ProcessUtils.getProcessName(pid));
+        Debugger.d(TAG,"registerAndReverseRegister,pid=" + pid + ",processName:" + ProcessUtils.getProcessName(getApplicationContext(),pid));
         IRemoteTransfer remoteTransfer = IRemoteTransfer.Stub.asInterface(transterBinder);
 
         Dispatcher.getInstance().registerRemoteTransfer(pid, transterBinder);
