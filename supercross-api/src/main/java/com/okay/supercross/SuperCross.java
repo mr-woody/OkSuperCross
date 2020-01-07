@@ -2,6 +2,8 @@ package com.okay.supercross;
 
 import android.content.Context;
 import android.os.IBinder;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.util.Log;
 
@@ -61,7 +63,7 @@ public class SuperCross {
      * Log扩展接口，方便做日志输出定制（不设置，默认使用DefaultLogDelegate）
      * @param delegate
      */
-    public static void setLogDelegate(LogDelegate delegate) {
+    public static void setLogDelegate(@NonNull LogDelegate delegate) {
         Debugger.setLogDelegate(delegate);
     }
 
@@ -71,7 +73,7 @@ public class SuperCross {
      * @param interfaceClass
      * @param serviceImpl
      */
-    public static void registerLocalService(Class<?> interfaceClass, Object serviceImpl) {
+    public static void registerLocalService(@Nullable Class<?> interfaceClass,@Nullable Object serviceImpl) {
         registerLocalService(interfaceClass,serviceImpl,null);
     }
 
@@ -81,7 +83,7 @@ public class SuperCross {
      * @param serviceImpl
      * @param tag             附加标示（为支持多实现）
      */
-    public static void registerLocalService(Class<?> interfaceClass, Object serviceImpl,String tag) {
+    public static void registerLocalService(@Nullable Class<?> interfaceClass,@Nullable Object serviceImpl,@Nullable String tag) {
         if (null == interfaceClass || null == serviceImpl) {
             return;
         }
@@ -100,7 +102,7 @@ public class SuperCross {
      * @param <T>
      * @return
      */
-    public static <T> T getLocalService(Class<?> interfaceClass) {
+    public static @Nullable <T> T getLocalService(@Nullable Class<?> interfaceClass) {
         return getLocalService(interfaceClass,null);
     }
 
@@ -110,7 +112,7 @@ public class SuperCross {
      * @param tag             附加标示（为支持多实现）
      * @return
      */
-    public static <T> T getLocalService(Class<?> interfaceClass,String tag) {
+    public static @Nullable <T> T getLocalService(@Nullable Class<?> interfaceClass,@Nullable String tag) {
         if (null == interfaceClass) {
             return null;
         }
@@ -129,7 +131,7 @@ public class SuperCross {
      * 取消注册本地服务
      * @param interfaceClass
      */
-    public static void unregisterLocalService(Class<?> interfaceClass) {
+    public static void unregisterLocalService(@Nullable Class<?> interfaceClass) {
         unregisterLocalService(interfaceClass,null);
     }
 
@@ -138,7 +140,7 @@ public class SuperCross {
      * @param interfaceClass
      * @param tag             附加标示（为支持多实现）
      */
-    public static void unregisterLocalService(Class<?> interfaceClass,String tag) {
+    public static void unregisterLocalService(@Nullable Class<?> interfaceClass,@Nullable String tag) {
         if (null == interfaceClass) {
             return;
         }
@@ -156,7 +158,7 @@ public class SuperCross {
      * @param interfaceClass  业务服务接口类class
      * @param serviceImpl     业务接口实现类(参数只支持基础类型和序列号对象)
      */
-    public static void registerRemoteService(Class<?> interfaceClass, Object serviceImpl) {
+    public static void registerRemoteService(@Nullable Class<?> interfaceClass,@Nullable Object serviceImpl) {
         registerRemoteService(interfaceClass,null,serviceImpl);
     }
 
@@ -167,7 +169,7 @@ public class SuperCross {
      * @param tag             附加标示（为支持多实现）
      * @param serviceImpl     业务接口实现类(参数只支持基础类型和序列号对象)
      */
-    public static void registerRemoteService(Class<?> interfaceClass,String tag,Object serviceImpl) {
+    public static void registerRemoteService(@Nullable Class<?> interfaceClass,@Nullable String tag,@Nullable Object serviceImpl) {
         if (null == interfaceClass || null == serviceImpl) {
             return;
         }
@@ -189,7 +191,7 @@ public class SuperCross {
      * @param <T>
      * @return
      */
-    public static synchronized <T> T getRemoteService(Class<?> interfaceClass) {
+    public static synchronized  @Nullable  <T> T getRemoteService(@Nullable Class<?> interfaceClass) {
         return getRemoteService(interfaceClass,null);
     }
 
@@ -200,7 +202,7 @@ public class SuperCross {
      * @param <T>
      * @return
      */
-    public static synchronized <T> T getRemoteService(Class<?> interfaceClass,String tag) {
+    public static synchronized  @Nullable <T> T getRemoteService(@Nullable Class<?> interfaceClass, @Nullable String tag) {
         if (null == interfaceClass) {
             return null;
         }
@@ -232,7 +234,7 @@ public class SuperCross {
      * 取消注册的远程服务
      * @param interfaceClass
      */
-    public static void unregisterRemoteService(Class<?> interfaceClass) {
+    public static void unregisterRemoteService(@Nullable Class<?> interfaceClass) {
         unregisterRemoteService(interfaceClass,null);
     }
 
@@ -242,7 +244,7 @@ public class SuperCross {
      * @param interfaceClass  业务服务接口类class
      * @param tag             附加标示（为支持多实现）
      */
-    public static void unregisterRemoteService(Class<?> interfaceClass,String tag) {
+    public static void unregisterRemoteService(@Nullable Class<?> interfaceClass,@Nullable String tag) {
         if (null == interfaceClass) {
             return;
         }
@@ -260,8 +262,11 @@ public class SuperCross {
      * @param name
      * @param listener
      */
-    public static void subscribe(String name, EventCallback listener) {
+    public static void subscribe(@Nullable String name,@Nullable EventCallback listener) {
         if (TextUtils.isEmpty(name)) {
+            return;
+        }
+        if (null == listener) {
             return;
         }
         Debugger.i(TAG,"subscribe:key = "+ name +", currentPid:" + android.os.Process.myPid() + ",processName:" + ProcessUtils.getProcessName(getAppContext()) + ",thread:" + Thread.currentThread().getName());
@@ -272,7 +277,7 @@ public class SuperCross {
      * 取消订阅事件，按照EventCallback进行取消
      * @param listener
      */
-    public static void unsubscribe(EventCallback listener) {
+    public static void unsubscribe(@Nullable EventCallback listener) {
         if (null == listener) {
             return;
         }
@@ -284,7 +289,7 @@ public class SuperCross {
      * 取消订阅事件，按照key进行取消,取消所有订阅这个key的EventCallback回调
      * @param key
      */
-    public static void unsubscribe(String key) {
+    public static void unsubscribe(@Nullable String key) {
         if (null == key) {
             return;
         }
@@ -296,7 +301,7 @@ public class SuperCross {
      * 发布事件(发布事件后,多个进程注册的EventCallback会同时回调)
      * @param event
      */
-    public static void publish(Event event) {
+    public static void publish(@Nullable Event event) {
         if (null == event) {
             return;
         }
