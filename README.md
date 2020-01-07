@@ -202,6 +202,20 @@ SuperCross.unregisterLocalService(RemoteService.class);
 ##### 4. 可在任意进程通过接口类型获取服务调用
 
 ```
+kotlin写法
+
+//第一种写法：
+val userRemoteService: IUserRemoteService? = SuperCross.getRemoteService(IUserRemoteService::class.java)
+//第二种写法：
+val userRemoteService1 = SuperCross.getRemoteService<IUserRemoteService?>(IUserRemoteService::class.java)
+
+
+```
+
+
+```
+java写法
+
 //获取远程服务
 RemoteService service = SuperCross.getRemoteService(RemoteService.class);
 
