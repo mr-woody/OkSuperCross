@@ -191,7 +191,7 @@ public class SuperCross {
      * @param <T>
      * @return
      */
-    public static synchronized  @Nullable  <T> T getRemoteService(@Nullable Class<?> interfaceClass) {
+    public static synchronized @Nullable <T> T getRemoteService(@Nullable Class<?> interfaceClass) {
         return getRemoteService(interfaceClass,null);
     }
 
