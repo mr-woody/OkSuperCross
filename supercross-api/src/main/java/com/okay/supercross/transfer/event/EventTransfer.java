@@ -15,7 +15,6 @@ import com.okay.supercross.event.EventCallback;
 import com.okay.supercross.log.Debugger;
 import com.okay.supercross.utils.ServiceUtils;
 
-import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -25,26 +24,28 @@ import java.util.Map;
 public class EventTransfer {
     private static final String TAG = EventTransfer.class.getSimpleName();
 
-    private Map<String, List<WeakReference<EventCallback>>> eventListeners = new HashMap<>();
+    private Map<String, List<EventCallback>> eventListeners = new HashMap<>();
 
     public void subscribeEventLocked(String name, EventCallback listener) {
         Debugger.d(TAG,"subscribeEventLocked,name:" + name);
         if (TextUtils.isEmpty(name) || listener == null) {
             return;
         }
-        if (null == eventListeners.get(name)) {
-            List<WeakReference<EventCallback>> list = new ArrayList<>();
+        boolean isNullValue = (null == eventListeners.get(name));
+        Debugger.d(TAG,"subscribeEventLocked->1,null == eventListeners.get(name):" + isNullValue);
+        if (isNullValue) {
+            List<EventCallback> list = new ArrayList<>();
             eventListeners.put(name, list);
         }
-        eventListeners.get(name).add(new WeakReference<>(listener));
+        eventListeners.get(name).add(listener);
     }
 
     public void unsubscribeEventLocked(EventCallback listener) {
-        for (Map.Entry<String, List<WeakReference<EventCallback>>> entry : eventListeners.entrySet()) {
-            List<WeakReference<EventCallback>> listeners = entry.getValue();
-            for (WeakReference<EventCallback> weakRef : listeners) {
-                if (listener == weakRef.get()) {
-                    listeners.remove(weakRef);
+        for (Map.Entry<String, List<EventCallback>> entry : eventListeners.entrySet()) {
+            List<EventCallback> listeners = entry.getValue();
+            for (EventCallback eventCallback : listeners) {
+                if (listener == eventCallback) {
+                    listeners.remove(eventCallback);
                     break;
                 }
             }
@@ -52,9 +53,9 @@ public class EventTransfer {
     }
 
     public void unsubscribeEventLocked(String key) {
-        List<WeakReference<EventCallback>> listeners = eventListeners.get(key);
-        for (WeakReference<EventCallback> weakRef : listeners) {
-            listeners.remove(weakRef);
+        List<EventCallback> listeners = eventListeners.get(key);
+        for (EventCallback eventCallback : listeners) {
+            listeners.remove(eventCallback);
         }
     }
 
@@ -80,17 +81,17 @@ public class EventTransfer {
 
     public void notifyLocked(Event event) {
         Debugger.d(TAG,"notifyLocked,currentPid:" + android.os.Process.myPid() + ",event.name:" + event.getName());
-        List<WeakReference<EventCallback>> listeners = eventListeners.get(event.getName());
+        List<EventCallback> listeners = eventListeners.get(event.getName());
         if (listeners == null) {
             Debugger.d(TAG,"There is no listeners for " + event.getName() + " in currentPid " + android.os.Process.myPid());
             return;
         }
         for (int i = listeners.size() - 1; i >= 0; --i) {
-            WeakReference<EventCallback> listenerRef = listeners.get(i);
-            if (listenerRef.get() == null) {
+            EventCallback eventCallback = listeners.get(i);
+            if (eventCallback == null) {
                 listeners.remove(i);
             } else {
-                listenerRef.get().onNotify(event.getData());
+                eventCallback.onNotify(event.getData());
             }
         }
     }

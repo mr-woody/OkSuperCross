@@ -82,7 +82,7 @@ allprojects {
 
 dependencies {
     ......
-    implementation "com.okay.supercross:supercross-api:1.1.0-SNAPSHOT"
+    implementation "com.okay.supercross:supercross-api:1.1.1-SNAPSHOT"
 }
 
 ```
