@@ -1,23 +1,22 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 buildscript {
     repositories {
+        maven { url 'https://jitpack.io' }
         maven { url 'http://maven.aliyun.com/nexus/content/groups/public/' }
         maven { url 'http://maven.aliyun.com/nexus/content/repositories/jcenter' }
         //本地自定义插件maven地址
         //maven { url 'file:///Users/woodys/.m2/repository' }
-        //远程服务地址
-        maven { url 'http://10.60.0.100:8081/repository/okayclient_snapshot/' }
         google()
         jcenter()
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:3.1.4'
-
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:1.3.21"
-        //本地maven地址
-        //classpath 'com.okay.supercross.plugin:supercross-plugin:1.0.2-SNAPSHOT'
+
+        classpath "com.github.dcendents:android-maven-gradle-plugin:2.1"
+        classpath 'com.github.mr-woody.UploadMavenPlugin:jitpack:1.2.0'
         //远程服务地址
-        classpath 'com.okay.supercross.plugin:supercross-plugin:1.1.0-SNAPSHOT'
+        //classpath 'com.github.mr-woody.OkSuperCross:supercross-plugin:1.0.0'
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
     }
@@ -25,6 +24,7 @@ buildscript {
 
 allprojects {
     repositories {
+        maven { url 'https://jitpack.io' }
         maven { url 'http://maven.aliyun.com/nexus/content/groups/public/' }
         maven { url 'http://maven.aliyun.com/nexus/content/repositories/jcenter' }
         google()
@@ -46,16 +46,16 @@ ext {
 
     //remote repository information
     user = "yuetao"
-    maven_url = 'http://10.60.0.100:8081/repository/okayclient_snapshot/'
+    maven_url = 'http://xxx/repository/xxx_snapshot/'
 
     // 本地仓库路径
-    local_maven_url = 'file:///users/woodys/.m2/repository/'
+    local_maven_url = 'xxx'
 
 
     //supercross-api
     supercross_api = [
             version : '1.1.1-SNAPSHOT',
-            group_id : "com.okay.supercross",
+            group_id : "com.woodys.supercross",
             artifact_id : "supercross-api",
             description : "Android supercross-api library"
     ]
@@ -64,9 +64,25 @@ ext {
     //supercross-plugin
     supercross_plugin = [
             version : '1.1.0-SNAPSHOT',
-            group_id : "com.okay.supercross.plugin",
+            group_id : "com.woodys.supercross.plugin",
             artifact_id : "supercross-plugin",
             description : "Android supercross-plugin library"
     ]
 
+}
+
+
+apply plugin: 'jitpack.io.upload'
+jitpack{
+    module{
+        //对应的library name
+        name "supercross-api"
+        //对应格式为com.github.[YourUsername],例如：https://github.com/mr-woody/UploadMavenPlugin ,那么对应的UserName为：mr-woody
+        group "com.github.mr-woody"
+    }
+    module{
+        //对应的library name
+        name "supercross-plugin"
+        group "com.github.mr-woody"
+    }
 }

@@ -1,6 +1,6 @@
 if (runAsApk.toBoolean()) {
     apply plugin: 'com.android.application'
-    apply plugin: 'com.okay.supercross.plugin'
+    apply plugin: 'com.woodys.supercross.plugin'
     android {
         compileSdkVersion rootProject.ext.compileSdkVersion
         buildToolsVersion rootProject.ext.buildToolsVersion

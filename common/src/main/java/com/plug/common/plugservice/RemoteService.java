@@ -1,6 +1,6 @@
 package com.plug.common.plugservice;
 
-import com.okay.supercross.ServiceCallback;
+import com.woodys.supercross.ServiceCallback;
 
 /**
  * Plug1的远程协议类

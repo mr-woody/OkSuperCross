@@ -2,8 +2,8 @@ package com.plug.common.application;
 
 import android.app.Application;
 
-import com.okay.supercross.BuildConfig;
-import com.okay.supercross.SuperCross;
+import com.woodys.supercross.BuildConfig;
+import com.woodys.supercross.SuperCross;
 
 public class BaseApplication extends Application {
 

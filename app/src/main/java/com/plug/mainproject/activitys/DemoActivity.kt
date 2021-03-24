@@ -5,9 +5,9 @@ import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.view.View
 import android.widget.TextView
-import com.okay.supercross.SuperCross
+import com.woodys.supercross.SuperCross
 
-import com.okay.supercross.utils.ProcessUtils
+import com.woodys.supercross.utils.ProcessUtils
 import com.plug.mainproject.R
 
 class DemoActivity : AppCompatActivity() {

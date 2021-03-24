@@ -9,10 +9,10 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.okay.supercross.SuperCross;
-import com.okay.supercross.event.Event;
-import com.okay.supercross.event.SimpleEventCallback;
-import com.okay.supercross.utils.ProcessUtils;
+import com.woodys.supercross.SuperCross;
+import com.woodys.supercross.event.Event;
+import com.woodys.supercross.event.SimpleEventCallback;
+import com.woodys.supercross.utils.ProcessUtils;
 import com.plug.common.event.EventConstants;
 import com.plug.plug2.R;
 

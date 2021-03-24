@@ -8,11 +8,11 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme">
 
-        <activity android:name="com.okay.supercross.activity.InvisibleActivity"
+        <activity android:name="com.woodys.supercross.activity.InvisibleActivity"
             android:exported="true"
             android:theme="@style/invisibleActivity">
             <intent-filter>
-                <data android:host="InvisibleActivity" android:scheme="com.okay.supercross.activity"
+                <data android:host="InvisibleActivity" android:scheme="com.woodys.supercross.activity"
                     tools:ignore="AppLinkUrlError"/>
             </intent-filter>
         </activity>

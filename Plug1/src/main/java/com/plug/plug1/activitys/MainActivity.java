@@ -7,8 +7,8 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.okay.supercross.SuperCross;
-import com.okay.supercross.utils.ProcessUtils;
+import com.woodys.supercross.SuperCross;
+import com.woodys.supercross.utils.ProcessUtils;
 import com.plug.common.plugservice.RemoteService;
 import com.plug.plug1.R;
 import com.plug.plug1.application.PlugRemoteService;

@@ -19,7 +19,7 @@
 * 暂时不支持跨app的场景使用，后续会完善这块功能。
 
 ### 使用库注意事项
-* [Todo](http://git.okjiaoyu.cn/stu/oksupercross/blob/master/document/TODO.md)
+* [Todo](/document/TODO.md)
 
 
 ### 示例介绍
@@ -40,7 +40,7 @@
 
 
 ### 演示下载
-[*Sample Apk*](http://git.okjiaoyu.cn/stu/oksupercross/raw/master/apk/app-debug.apk)
+[*Sample Apk*](/apk/app-debug.apk)
 
 
 ### 如何接入
@@ -52,14 +52,11 @@
 buildscript {
     repositories {
         ......
-        //本地maven地址，
-        //maven { url 'file:///Users/woodys/.m2/repository' }
-        //服务器的maven地址
-        maven{ url "http://10.60.0.100:8081/repository/okayclient_snapshot/"}
+        maven { url 'https://jitpack.io' }
     }
     dependencies {
         ......
-        classpath 'com.okay.supercross.plugin:supercross-plugin:1.1.0-SNAPSHOT'
+        classpath 'com.github.mr-woody.OkSuperCross:supercross-plugin:1.0.0'
     }
 }
 ```
@@ -71,7 +68,7 @@ buildscript {
 allprojects {
     repositories {
         ......
-        maven{ url "http://10.60.0.100:8081/repository/okayclient_snapshot/"}
+        maven { url 'https://jitpack.io' }
     }
 }
 ```
@@ -82,7 +79,7 @@ allprojects {
 
 dependencies {
     ......
-    implementation "com.okay.supercross:supercross-api:1.1.1-SNAPSHOT"
+    implementation 'com.github.mr-woody.OkSuperCross:supercross-api:1.0.0'
 }
 
 ```
@@ -90,7 +87,7 @@ dependencies {
 
 ```
 ......
-apply plugin: 'com.okay.supercross.plugin'
+apply plugin: 'com.woodys.supercross.plugin'
 
 ```
 
@@ -302,7 +299,4 @@ SuperCross.unsubscribe(EventCallback listener);
 
 
 ### 其他文档
-* [ChangeLog](http://git.okjiaoyu.cn/stu/oksupercross/blob/master/document/CHANGE_LOG.md)
-
-
-![](http://git.okjiaoyu.cn/stu/oksupercross/raw/master/image/author.png)
+* [ChangeLog](/document/CHANGE_LOG.md)

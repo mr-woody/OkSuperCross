@@ -7,7 +7,7 @@ android {
         minSdkVersion 11
     }
 
-    aidlPackageWhiteList "com/okay/supercross/ServiceCallback.aidl"
+    aidlPackageWhiteList "com/woodys/supercross/ServiceCallback.aidl"
 
     buildTypes {
         release {
@@ -25,4 +25,4 @@ dependencies {
 sourceCompatibility = "1.7"
 targetCompatibility = "1.7"
 
-apply from : "upload.gradle"
+//apply from : "upload.gradle"
